@@ -67,27 +67,84 @@ namespace CSC205HW4
 			// The StreamWriter is automatically closed and disposed of when exiting the using block
 		}
 
-		// Method to sort an array of integers using the selection sort algorithm
 		static void Method02(int[] arr)
 		{
-			// Loop through each element in the array
-			for (int start = 0; start < arr.Length - 1; start++)
+			// Call the MergeSort function to sort the entire array
+			MergeSort(arr, 0, arr.Length - 1);
+		}
+
+		// Recursive MergeSort function to sort the array
+		static void MergeSort(int[] arr, int left, int right)
+		{
+			// Base case: if the array has one or zero elements, it's already sorted
+			if (left < right)
 			{
-				// Assume the current position is the minimum
-				int posMin = start;
-				// Find the minimum element in the unsorted portion of the array
-				for (int i = start + 1; i < arr.Length; i++)
-				{
-					if (arr[i] < arr[posMin])
-					{
-						posMin = i;
-					}
-				}
-				// Swap the found minimum element with the element at the start position
-				int tmp = arr[start];
-				arr[start] = arr[posMin];
-				arr[posMin] = tmp;
+				// Find the middle point
+				int mid = (left + right) / 2;
+
+				// Recursively sort the first half
+				MergeSort(arr, left, mid);
+
+				// Recursively sort the second half
+				MergeSort(arr, mid + 1, right);
+
+				// Merge the two sorted halves
+				Merge(arr, left, mid, right);
 			}
 		}
+
+		// Function to merge two sorted halves of the array
+		static void Merge(int[] arr, int left, int mid, int right)
+		{
+			// Find the sizes of the two subarrays to be merged
+			int n1 = mid - left + 1;
+			int n2 = right - mid;
+
+			// Create temporary arrays to hold the subarrays
+			int[] L = new int[n1];
+			int[] R = new int[n2];
+
+			// Copy data to temporary arrays L[] and R[]
+			Array.Copy(arr, left, L, 0, n1);
+			Array.Copy(arr, mid + 1, R, 0, n2);
+
+			// Merge the temporary arrays back into the original array
+
+			int i = 0; // Initial index of the first subarray
+			int j = 0; // Initial index of the second subarray
+			int k = left; // Initial index of the merged subarray
+
+			while (i < n1 && j < n2)
+			{
+				if (L[i] <= R[j])
+				{
+					arr[k] = L[i];
+					i++;
+				}
+				else
+				{
+					arr[k] = R[j];
+					j++;
+				}
+				k++;
+			}
+
+			// Copy the remaining elements of L[], if any
+			while (i < n1)
+			{
+				arr[k] = L[i];
+				i++;
+				k++;
+			}
+
+			// Copy the remaining elements of R[], if any
+			while (j < n2)
+			{
+				arr[k] = R[j];
+				j++;
+				k++;
+			}
+		}
+
 	}
 }

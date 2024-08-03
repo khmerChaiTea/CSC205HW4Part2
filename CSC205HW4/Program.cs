@@ -69,82 +69,50 @@ namespace CSC205HW4
 
 		static void Method02(int[] arr)
 		{
-			// Call the MergeSort function to sort the entire array
-			MergeSort(arr, 0, arr.Length - 1);
+			// Call the QuickSort function to sort the entire array
+			QuickSort(arr, 0, arr.Length - 1);
 		}
 
-		// Recursive MergeSort function to sort the array
-		static void MergeSort(int[] arr, int left, int right)
+		// Recursive QuickSort function to sort the array
+		static void QuickSort(int[] arr, int low, int high)
 		{
-			// Base case: if the array has one or zero elements, it's already sorted
-			if (left < right)
+			if (low < high)
 			{
-				// Find the middle point
-				int mid = (left + right) / 2;
+				// Partition the array and get the pivot index
+				int pivotIndex = Partition(arr, low, high);
 
-				// Recursively sort the first half
-				MergeSort(arr, left, mid);
-
-				// Recursively sort the second half
-				MergeSort(arr, mid + 1, right);
-
-				// Merge the two sorted halves
-				Merge(arr, left, mid, right);
+				// Recursively sort elements before and after partition
+				QuickSort(arr, low, pivotIndex - 1);
+				QuickSort(arr, pivotIndex + 1, high);
 			}
 		}
 
-		// Function to merge two sorted halves of the array
-		static void Merge(int[] arr, int left, int mid, int right)
+		// Function to partition the array and return the pivot index
+		static int Partition(int[] arr, int low, int high)
 		{
-			// Find the sizes of the two subarrays to be merged
-			int n1 = mid - left + 1;
-			int n2 = right - mid;
+			// Choose the last element as the pivot
+			int pivot = arr[high];
+			int i = low - 1;
 
-			// Create temporary arrays to hold the subarrays
-			int[] L = new int[n1];
-			int[] R = new int[n2];
-
-			// Copy data to temporary arrays L[] and R[]
-			Array.Copy(arr, left, L, 0, n1);
-			Array.Copy(arr, mid + 1, R, 0, n2);
-
-			// Merge the temporary arrays back into the original array
-
-			int i = 0; // Initial index of the first subarray
-			int j = 0; // Initial index of the second subarray
-			int k = left; // Initial index of the merged subarray
-
-			while (i < n1 && j < n2)
+			// Rearrange elements based on pivot
+			for (int j = low; j < high; j++)
 			{
-				if (L[i] <= R[j])
+				if (arr[j] < pivot)
 				{
-					arr[k] = L[i];
 					i++;
+					// Swap elements at i and j
+					int temp = arr[i];
+					arr[i] = arr[j];
+					arr[j] = temp;
 				}
-				else
-				{
-					arr[k] = R[j];
-					j++;
-				}
-				k++;
 			}
 
-			// Copy the remaining elements of L[], if any
-			while (i < n1)
-			{
-				arr[k] = L[i];
-				i++;
-				k++;
-			}
+			// Swap the pivot element to its correct position
+			int tempPivot = arr[i + 1];
+			arr[i + 1] = arr[high];
+			arr[high] = tempPivot;
 
-			// Copy the remaining elements of R[], if any
-			while (j < n2)
-			{
-				arr[k] = R[j];
-				j++;
-				k++;
-			}
+			return i + 1;
 		}
-
 	}
 }
